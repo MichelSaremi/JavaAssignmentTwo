@@ -325,6 +325,57 @@ public class SqliteHelper {
         }
     }
 
+    //---reading all tracks and genreID
+    public ArrayList<CustomerFavGenre> selectGenreByID(String id){
+        ArrayList<CustomerFavGenre> fav = new ArrayList<CustomerFavGenre>();
+
+        try {
+            // Open Connection
+            conn = DriverManager.getConnection(URL);
+            System.out.println("Connection to SQLite has been established.");
+
+            // Prepare Statement
+            PreparedStatement preparedStatement =
+                    conn.prepareStatement("SELECT FirstName, LastName, Customer.CustomerId, GenreId, COUNT(GenreId) FROM Customer " +
+                            "INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId " +
+                            "INNER JOIN InvoiceLine ON Invoice.InvoiceId = InvoiceLine.InvoiceId GROUP BY InvoiceId " +
+                            "INNER JOIN Track ON InvoiceLine.TrackId = Track.TrackId " + "GROUP BY C" +
+                            "INNER JOIN Genre ON Track.GenreId = Genre.GenreId WHERE Customer.CustomerId = ? ORDER BY COUNT(GenreId) DESC ");
+
+            preparedStatement.setString(1, id);
+            // Execute Statement
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Process Results
+            while (resultSet.next()) {
+                fav.add(
+                        new CustomerFavGenre(
+                                resultSet.getString("FirstName"),
+                                resultSet.getString("LastName"),
+                                resultSet.getString("CustomerId"),
+                                resultSet.getString("GenreId"),
+                                resultSet.getString("COUNT(GenreId)")
+                        ));
+            }
+        }
+        catch (Exception ex){
+            System.out.println("Something went wrong...");
+            System.out.println(ex.toString());
+        }
+        finally {
+            try {
+                // Close Connection
+                conn.close();
+            }
+            catch (Exception ex){
+                System.out.println("Something went wrong while closing connection.");
+                System.out.println(ex.toString());
+            }
+            return fav;
+        }
+    }
+
+
     //---reading all genre from database
     public Genre selectFavGenre(String genreID){
         Genre genre = null;
