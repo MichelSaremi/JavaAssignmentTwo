@@ -1,4 +1,4 @@
-package com.example.javaassignmenttwo;
+package com.example.javaassignmenttwo.model;
 
 public class CustomerSpender
 {

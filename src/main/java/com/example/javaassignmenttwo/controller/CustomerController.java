@@ -1,5 +1,8 @@
-package com.example.javaassignmenttwo;
+package com.example.javaassignmenttwo.controller;
 
+import com.example.javaassignmenttwo.*;
+import com.example.javaassignmenttwo.data.CustomerRepository;
+import com.example.javaassignmenttwo.model.*;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -16,8 +19,8 @@ public class CustomerController {
     public ArrayList<String> allCustomers(){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        ArrayList<Customer> customers = sqliteHelper.selectAllCustomers();
+        CustomerRepository customerRepository = new CustomerRepository();
+        ArrayList<Customer> customers = customerRepository.selectAllCustomers();
         if(customers.size() != 0) {
             for (Customer c : customers) {
                 output=
@@ -37,8 +40,8 @@ public class CustomerController {
     @GetMapping("/Customers/id/{id}")
     public String customerById( @PathVariable("id") String id){
         String output;
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        Customer c = sqliteHelper.selectSpecificCustomerID(id);
+        CustomerRepository customerRepository = new CustomerRepository();
+        Customer c = customerRepository.selectSpecificCustomerID(id);
         output=
                 c.getCustomerId()+", "+
                         c.getCustomerFirstname()+", "+
@@ -55,8 +58,8 @@ public class CustomerController {
     public ArrayList<String> customerByName( @PathVariable("name") String name){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        ArrayList<Customer> customers = sqliteHelper.selectSpecificCustomersName(name);
+        CustomerRepository customerRepository = new CustomerRepository();
+        ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName(name);
         if(customers.size() != 0) {
             for (Customer c : customers) {
                 output=
@@ -77,8 +80,8 @@ public class CustomerController {
     public ArrayList<String> customerByName( @PathVariable("offset") int offset, @PathVariable("limit") int limit){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        ArrayList<Customer> customers = sqliteHelper.selectSubsetOfCustomers(offset,limit);
+        CustomerRepository customerRepository = new CustomerRepository();
+        ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(offset,limit);
         if(customers.size() != 0) {
             for (Customer c : customers) {
                 output=
@@ -108,8 +111,8 @@ public class CustomerController {
 
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        Customer newCustomer = sqliteHelper.addNewCustomer(customer);
+        CustomerRepository customerRepository = new CustomerRepository();
+        Customer newCustomer = customerRepository.addNewCustomer(customer);
 
         output=
                 newCustomer.getCustomerFirstname()+", "+
@@ -125,12 +128,12 @@ public class CustomerController {
     public String customerUpdateExisting(@RequestParam("CustomerId") String CustomerId, @RequestBody Customer customer) throws SQLException
     {
         String output = null;
-        SqliteHelper sqliteHelper = new SqliteHelper();
+        CustomerRepository customerRepository = new CustomerRepository();
         // first get the existing customer by ID, who we wish to update on.
-        Customer existingCustomer = sqliteHelper.selectSpecificCustomerID(CustomerId);
+        Customer existingCustomer = customerRepository.selectSpecificCustomerID(CustomerId);
 
         // then we let the update commence.
-        customer = sqliteHelper.updateExistingCustomer(existingCustomer);
+        customer = customerRepository.updateExistingCustomer(existingCustomer);
 
         // write out the result of the update
         output=
@@ -150,8 +153,8 @@ public class CustomerController {
     {
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        ArrayList<CustomerSpender> customers = sqliteHelper.orderCustomerByBiggestSpender();
+        CustomerRepository customerRepository = new CustomerRepository();
+        ArrayList<CustomerSpender> customers = customerRepository.orderCustomerByBiggestSpender();
 
         if(customers.size() != 0) {
             for (CustomerSpender c : customers) {
@@ -170,8 +173,8 @@ public class CustomerController {
     {
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        SqliteHelper sqliteHelper = new SqliteHelper();
-        ArrayList<CustomerCountry> customers = sqliteHelper.orderCustomerByCountry();
+        CustomerRepository customerRepository = new CustomerRepository();
+        ArrayList<CustomerCountry> customers = customerRepository.orderCustomerByCountry();
 
         if(customers.size() != 0) {
             for (CustomerCountry c : customers) {
@@ -186,20 +189,20 @@ public class CustomerController {
     //---get a customers favourite genre
     @GetMapping("/Customers/genre/{id}")
     public ArrayList<String> customerFavGenre( @PathVariable("id") String id){
-        SqliteHelper sqliteHelper = new SqliteHelper();
+        CustomerRepository customerRepository = new CustomerRepository();
         Program program = new Program();
         Genre favGenre1 = null;
         Genre favGenre2 = null;
 
         //---link customer ID to invoice ID
-        ArrayList<CustomerInvoice> customerInvoices = sqliteHelper.selectAllInvoiceByID(id);
+        ArrayList<CustomerInvoice> customerInvoices = customerRepository.selectAllInvoiceByID(id);
 
         //---Link invoice ID to track ID
         ArrayList<InvoiceLine> UserInvoiceLines = new ArrayList<InvoiceLine>();
         for (CustomerInvoice ci : customerInvoices) {
             String InvoiceID = ci.getInvoiceId();
 
-            ArrayList<InvoiceLine> UserInvoiceLine = sqliteHelper.selectUserInvoiceLines(InvoiceID);
+            ArrayList<InvoiceLine> UserInvoiceLine = customerRepository.selectUserInvoiceLines(InvoiceID);
             UserInvoiceLines.addAll(UserInvoiceLine);
         }
 
@@ -209,7 +212,7 @@ public class CustomerController {
             String trackID = uil.getTrackId();
 
 
-            ArrayList<Track> UserTrack = sqliteHelper.selectTracks(trackID);
+            ArrayList<Track> UserTrack = customerRepository.selectTracks(trackID);
             UserTracks.addAll(UserTrack);
         }
 
@@ -246,14 +249,14 @@ public class CustomerController {
         ArrayList<String> genre = new ArrayList<>();
 
         if (mapValues.get(0) == mapValues.get(1)){
-            favGenre1 = sqliteHelper.selectFavGenre(mapKeys.get(0));
-            favGenre2 = sqliteHelper.selectFavGenre(mapKeys.get(1));
+            favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
+            favGenre2 = customerRepository.selectFavGenre(mapKeys.get(1));
             genre.add(favGenre1.getName());
             genre.add(favGenre2.getName());
 
             //---else display the first genre
         }else if (mapValues.get(0) != mapValues.get(1)){
-            favGenre1 = sqliteHelper.selectFavGenre(mapKeys.get(0));
+            favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
             genre.add(favGenre1.getName());
         }
         return genre;

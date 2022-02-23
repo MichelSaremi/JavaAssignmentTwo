@@ -1,4 +1,4 @@
-package com.example.javaassignmenttwo;
+package com.example.javaassignmenttwo.data;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

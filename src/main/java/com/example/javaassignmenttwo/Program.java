@@ -1,13 +1,15 @@
 package com.example.javaassignmenttwo;
 
-import java.sql.Connection;
+import com.example.javaassignmenttwo.data.CustomerRepository;
+import com.example.javaassignmenttwo.model.*;
+
 import java.sql.SQLException;
 import java.util.*;
 
 public class Program {
 
     public static void main(String[] args) throws SQLException {
-        SqliteHelper sqliteHelper = new SqliteHelper();
+        CustomerRepository customerRepository = new CustomerRepository();
         //ArrayList<Customer> customers = sqliteHelper.selectAllCustomers();
         //ArrayList<Customer> customers = sqliteHelper.selectSpecificCustomersName("Mark");
         //ArrayList<Customer> customers = sqliteHelper.selectSubsetOfCustomers(12,4);
@@ -16,7 +18,7 @@ public class Program {
         //printCustomer(customer);
 
 
-        //mostPopularGenre("1");
+        mostPopularGenre("1");
 
         /**
          * Added function calls to task 5, 6, 7 and 8 here. I needed to nest these calls inside a try catch statement to check the SQL setup and query were correct.
@@ -26,7 +28,7 @@ public class Program {
             //sqliteHelper.addNewCustomer(conn); // task 5
             //sqliteHelper.updateExistingCustomer(conn); // task 6
             //sqliteHelper.orderCustomerByCountry(conn); // task 7
-            sqliteHelper.orderCustomerByBiggestSpender(); // task 8
+            //customerRepository.orderCustomerByBiggestSpender(); // task 8
 
 
     }
@@ -140,17 +142,17 @@ public class Program {
     //---Display users most popular genre
     public static void mostPopularGenre(String id ){
 
-        SqliteHelper sqliteHelper = new SqliteHelper();
+        CustomerRepository customerRepository = new CustomerRepository();
 
         //---link customer ID to invoice ID
-        ArrayList<CustomerInvoice> customerInvoices = sqliteHelper.selectAllInvoiceByID(id);
+        ArrayList<CustomerInvoice> customerInvoices = customerRepository.selectAllInvoiceByID(id);
 
         //---Link invoice ID to track ID
         ArrayList<InvoiceLine> UserInvoiceLines = new ArrayList<InvoiceLine>();
         for (CustomerInvoice ci : customerInvoices) {
             String InvoiceID = ci.getInvoiceId();
 
-            ArrayList<InvoiceLine> UserInvoiceLine = sqliteHelper.selectUserInvoiceLines(InvoiceID);
+            ArrayList<InvoiceLine> UserInvoiceLine = customerRepository.selectUserInvoiceLines(InvoiceID);
             UserInvoiceLines.addAll(UserInvoiceLine);
         }
 
@@ -160,7 +162,7 @@ public class Program {
             String trackID = uil.getTrackId();
 
 
-            ArrayList<Track> UserTrack = sqliteHelper.selectTracks(trackID);
+            ArrayList<Track> UserTrack = customerRepository.selectTracks(trackID);
             UserTracks.addAll(UserTrack);
         }
 
@@ -203,15 +205,15 @@ public class Program {
         //---If the first two values are tied
         //---display both genre
         if (mapValues.get(0) == mapValues.get(1)){
-            Genre favGenre1 = sqliteHelper.selectFavGenre(mapKeys.get(0));
-            Genre favGenre2 = sqliteHelper.selectFavGenre(mapKeys.get(1));
+            Genre favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
+            Genre favGenre2 = customerRepository.selectFavGenre(mapKeys.get(1));
             System.out.println("Users most favourite genre");
             printGenre(favGenre1);
             printGenre(favGenre2);
 
         //---else display the first genre
         }else if (mapValues.get(0) != mapValues.get(1)){
-            Genre favGenre1 = sqliteHelper.selectFavGenre(mapKeys.get(0));
+            Genre favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
             System.out.println("Users most favourite genre");
             printGenre(favGenre1);
         }

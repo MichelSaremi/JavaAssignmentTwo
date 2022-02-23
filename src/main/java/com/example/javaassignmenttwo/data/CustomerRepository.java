@@ -1,9 +1,11 @@
-package com.example.javaassignmenttwo;
+package com.example.javaassignmenttwo.data;
+
+import com.example.javaassignmenttwo.model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class SqliteHelper {
+public class CustomerRepository {
     // Setup
     static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
     Connection conn = null;
