@@ -98,21 +98,17 @@ public class CustomerController {
     }
 
     //-- get ordered customers by the customers, who have spent the most on the music site.
+    //-- get ordered customers by the customers, who have spent the most on the music site.
     @PostMapping("Customers/add")
-    public String customerAddNew(@RequestBody Customer customer) throws SQLException
+    public String customerAddNew(@RequestBody Customer customer, @RequestParam String firstname, @RequestParam String lastname, @RequestParam String country, @RequestParam String postalCode, @RequestParam String phoneNumber, @RequestParam String email) throws SQLException
     {
         // normally we would get an input from the view, here we're setting the parameters for the new customer!
-        customer.setCustomerFirstname("Test");
-        customer.setCustomerLastname("Testerson");
-        customer.setCustomerCountry("DK");
-        customer.setCustomerPostalCode("2600");
-        customer.setCustomerPhoneNumber("55555555");
-        customer.setCustomerEmail("test@fakemail.com");
+        Customer newCustomer = new Customer("-1", firstname, lastname, country, postalCode, phoneNumber, email);
 
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        CustomerRepository customerRepository = new CustomerRepository();
-        Customer newCustomer = customerRepository.addNewCustomer(customer);
+        CustomerRepository sqliteHelper = new CustomerRepository();
+        newCustomer = sqliteHelper.addNewCustomer(newCustomer);
 
         output=
                 newCustomer.getCustomerFirstname()+", "+
@@ -125,24 +121,24 @@ public class CustomerController {
     }
 
     @PutMapping("Customers/update/{CustomerId}")
-    public String customerUpdateExisting(@RequestParam("CustomerId") String CustomerId, @RequestBody Customer customer) throws SQLException
+    public String customerUpdateExisting(@RequestParam("CustomerId") String CustomerId, @RequestParam String firstname, @RequestParam String lastname, @RequestParam String country, @RequestParam String postalCode, @RequestParam String phoneNumber, @RequestParam String email, @RequestBody Customer customer) throws SQLException
     {
         String output = null;
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepository sqliteHelper = new CustomerRepository();
         // first get the existing customer by ID, who we wish to update on.
-        Customer existingCustomer = customerRepository.selectSpecificCustomerID(CustomerId);
+        Customer existingCustomer = new Customer(CustomerId, firstname, lastname, country, postalCode, phoneNumber, email);
 
         // then we let the update commence.
-        customer = customerRepository.updateExistingCustomer(existingCustomer);
+        existingCustomer = sqliteHelper.updateExistingCustomer(existingCustomer);
 
         // write out the result of the update
         output=
-                customer.getCustomerFirstname()+", "+
-                        customer.getCustomerLastname()+", "+
-                        customer.getCustomerCountry()+"," +
-                        customer.getCustomerPostalCode()+"," +
-                        customer.getCustomerPhoneNumber()+"," +
-                        customer.getCustomerEmail()+". ";
+                existingCustomer.getCustomerFirstname()+", "+
+                        existingCustomer.getCustomerLastname()+", "+
+                        existingCustomer.getCustomerCountry()+"," +
+                        existingCustomer.getCustomerPostalCode()+"," +
+                        existingCustomer.getCustomerPhoneNumber()+"," +
+                        existingCustomer.getCustomerEmail()+". ";
 
         return output;
     }

@@ -373,7 +373,14 @@ public class CustomerRepository {
     public Customer addNewCustomer(Customer newCustomer) throws SQLException
     {
         try {
-            // newCustomer = new Customer("0", "Test", "Testerson", "Denmark", "2600", "555-555-55", "test@test.com");
+            conn = ConnectionManager.getInstance().getConnection();
+
+            // use this dummy data only, if the method runs via Program class, to only run on the DB side of things (ignoring API endpoint).
+            if (newCustomer == null)
+            {
+                newCustomer = new Customer("0", "Test", "Testerson", "Denmark", "2600", "555-555-55", "test@test.com");
+            }
+
             PreparedStatement insertCustomerStatement = conn.prepareStatement("INSERT INTO Customer(FirstName, LastName, Country, PostalCode, Phone, Email) VALUES (?,?,?,?,?,?)");
 
             // Inserting values from the inquired customer instance pushed through via the parameter of this function.
@@ -388,7 +395,7 @@ public class CustomerRepository {
 
             // prepare another statement for testing purposes. Only used to see, if the new customer was really added.
             PreparedStatement checkResultStatement = conn.prepareStatement("SELECT CustomerId,FirstName,LastName FROM Customer WHERE FirstName LIKE ?");
-            checkResultStatement.setString(1, "Test");
+            checkResultStatement.setString(1, newCustomer.getCustomerFirstname());
             ResultSet resultset = checkResultStatement.executeQuery();
 
             int id = resultset.getInt("CustomerId");
@@ -413,16 +420,28 @@ public class CustomerRepository {
     public Customer updateExistingCustomer(Customer existingCustomer) throws SQLException
     {
         try {
-            // doesn't expose potential user of the application to overwrite information about himself, unfortunately hardcoded code.
+            conn = ConnectionManager.getInstance().getConnection();
 
-            //Customer newCustomer = new Customer(-1, "Testy", "Testeron", "Denmark", "2600", "555-555-55", "test@test.com");
-            PreparedStatement updateCustomerStatement = conn.prepareStatement("UPDATE Customer SET FirstName = 'Testy', LastName = 'Testeron', Country = 'Denmark', PostalCode = '2600', Phone = '+4545043112', Email = 'test.com' WHERE FirstName = 'Test'");
+            // use this dummy data only, if the method runs via Program class, to only run on the DB side of things (ignoring API endpoint).
+            if (existingCustomer == null)
+            {
+                existingCustomer = new Customer("60", "Testy", "Testeron", "Denmark", "2600", "555-555-55", "test@test.com");
+            }
+            PreparedStatement updateCustomerStatement = conn.prepareStatement("UPDATE Customer SET CustomerId = ?, FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? WHERE CustomerId = ?");
             //insertCustomerStatement.setInt(1,newCustomer.getId());
+            updateCustomerStatement.setString(1,existingCustomer.getCustomerId());
+            updateCustomerStatement.setString(2,existingCustomer.getCustomerFirstname());
+            updateCustomerStatement.setString(3,existingCustomer.getCustomerLastname());
+            updateCustomerStatement.setString(4,existingCustomer.getCustomerCountry());
+            updateCustomerStatement.setString(5,existingCustomer.getCustomerPostalCode());
+            updateCustomerStatement.setString(6,existingCustomer.getCustomerPhoneNumber());
+            updateCustomerStatement.setString(7,existingCustomer.getCustomerEmail());
+            updateCustomerStatement.setString(8,existingCustomer.getCustomerId());
 
             updateCustomerStatement.executeUpdate();
 
             PreparedStatement checkResultStatement = conn.prepareStatement("SELECT CustomerId,FirstName,LastName FROM Customer WHERE FirstName LIKE ?");
-            checkResultStatement.setString(1, "Testy");
+            checkResultStatement.setString(1, existingCustomer.getCustomerFirstname());
             ResultSet resultset = checkResultStatement.executeQuery();
 
             int id = resultset.getInt("CustomerId");
@@ -431,16 +450,16 @@ public class CustomerRepository {
             System.out.printf("Customer {%d,%s,%s} has now been updated in the Customer table \n", id, firstname, lastname);
         }
         finally {
-        try {
-            // Close Connection
-            conn.close();
+            try {
+                // Close Connection
+                conn.close();
+            }
+            catch (Exception ex){
+                System.out.println("Something went wrong while closing connection.");
+                System.out.println(ex.toString());
+            }
+            return existingCustomer;
         }
-        catch (Exception ex){
-            System.out.println("Something went wrong while closing connection.");
-            System.out.println(ex.toString());
-        }
-        return existingCustomer;
-    }
     }
 
     // task 8, order customers after, who has spent the most money on products.

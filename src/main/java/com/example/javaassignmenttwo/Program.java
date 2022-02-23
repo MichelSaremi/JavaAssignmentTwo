@@ -10,10 +10,10 @@ public class Program {
 
     public static void main(String[] args) throws SQLException {
         CustomerRepository customerRepository = new CustomerRepository();
-        //ArrayList<Customer> customers = sqliteHelper.selectAllCustomers();
-        //ArrayList<Customer> customers = sqliteHelper.selectSpecificCustomersName("Mark");
-        //ArrayList<Customer> customers = sqliteHelper.selectSubsetOfCustomers(12,4);
-        //Customer customer = sqliteHelper.selectSpecificCustomerID("55");
+        //ArrayList<Customer> customers = customerRepository.selectAllCustomers();
+        //ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName("Mark");
+        //ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(12,4);
+        //Customer customer = customerRepository.selectSpecificCustomerID("55");
         //printCustomers(customers);
         //printCustomer(customer);
 
@@ -25,10 +25,10 @@ public class Program {
          */
 
 
-            //sqliteHelper.addNewCustomer(conn); // task 5
-            //sqliteHelper.updateExistingCustomer(conn); // task 6
-            //sqliteHelper.orderCustomerByCountry(conn); // task 7
-            //customerRepository.orderCustomerByBiggestSpender(); // task 8
+        //customerRepository.addNewCustomer(null); // task 5
+        //customerRepository.updateExistingCustomer(null); // task 6
+        //customerRepository.orderCustomerByCountry(); // task 7
+        //customerRepository.orderCustomerByBiggestSpender(); // task 8
 
 
     }
