@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Program {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         SqliteHelper sqliteHelper = new SqliteHelper();
         //ArrayList<Customer> customers = sqliteHelper.selectAllCustomers();
         //ArrayList<Customer> customers = sqliteHelper.selectSpecificCustomersName("Mark");
@@ -14,57 +14,21 @@ public class Program {
         //Customer customer = sqliteHelper.selectSpecificCustomerID("55");
         //printCustomers(customers);
         //printCustomer(customer);
-        ArrayList<CustomerFavGenre> fav = sqliteHelper.selectGenreByID("1");
-        printFav(fav);
+
+
         //mostPopularGenre("1");
 
         /**
          * Added function calls to task 5, 6, 7 and 8 here. I needed to nest these calls inside a try catch statement to check the SQL setup and query were correct.
          */
 
-        //Connection conn = ConnectionManager.getInstance().getConnection();
-        //try
-        //{
+
             //sqliteHelper.addNewCustomer(conn); // task 5
             //sqliteHelper.updateExistingCustomer(conn); // task 6
             //sqliteHelper.orderCustomerByCountry(conn); // task 7
-            //sqliteHelper.orderCustomerByBiggestSpender(conn); // task 8
-        //}
-        //catch (SQLException sqle)
-        //{
-        //    sqle.printStackTrace();
-        //}
-        //finally
-        //{
-        //    try
-        //    {
-        //        conn.close();
-        //    }
-        //    catch (SQLException sqle)
-        //    {
-        //        sqle.printStackTrace();
-        //        System.exit(-1);
-        //    }
-       // }
-
-    }
+            sqliteHelper.orderCustomerByBiggestSpender(); // task 8
 
 
-    //---print more than one Customer objects
-    public static void printFav(ArrayList<CustomerFavGenre> fav) {
-        if(fav.size() != 0) {
-            for (CustomerFavGenre c : fav) {
-                System.out.println("-------------------------------");
-                System.out.println(c.getFirstName());
-                System.out.println(c.getLastName());
-                System.out.println(c.getCustomerId());
-                System.out.println(c.getGenreId());
-                System.out.println(c.getGenreCount());
-
-            }
-        } else {
-            System.out.println("No customers returned");
-        }
     }
 
     //---method to sort a Hashmap by value

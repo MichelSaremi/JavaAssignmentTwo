@@ -1,10 +1,9 @@
 package com.example.javaassignmenttwo;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
+import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -90,6 +89,95 @@ public class CustomerController {
                                 c.getCustomerPostalCode()+", "+
                                 c.getCustomerPhoneNumber()+", "+
                                 c.getCustomerEmail()+". ";
+                outputs.add(output);
+            }}
+        return outputs;
+    }
+
+    //-- get ordered customers by the customers, who have spent the most on the music site.
+    @PostMapping("Customers/add")
+    public String customerAddNew(@RequestBody Customer customer) throws SQLException
+    {
+        // normally we would get an input from the view, here we're setting the parameters for the new customer!
+        customer.setCustomerFirstname("Test");
+        customer.setCustomerLastname("Testerson");
+        customer.setCustomerCountry("DK");
+        customer.setCustomerPostalCode("2600");
+        customer.setCustomerPhoneNumber("55555555");
+        customer.setCustomerEmail("test@fakemail.com");
+
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<String>();
+        SqliteHelper sqliteHelper = new SqliteHelper();
+        Customer newCustomer = sqliteHelper.addNewCustomer(customer);
+
+        output=
+                newCustomer.getCustomerFirstname()+", "+
+                        newCustomer.getCustomerLastname()+", "+
+                        newCustomer.getCustomerCountry()+"," +
+                        newCustomer.getCustomerPostalCode()+"," +
+                        newCustomer.getCustomerPhoneNumber()+"," +
+                        newCustomer.getCustomerEmail()+". ";
+        return output;
+    }
+
+    @PutMapping("Customers/update/{CustomerId}")
+    public String customerUpdateExisting(@RequestParam("CustomerId") String CustomerId, @RequestBody Customer customer) throws SQLException
+    {
+        String output = null;
+        SqliteHelper sqliteHelper = new SqliteHelper();
+        // first get the existing customer by ID, who we wish to update on.
+        Customer existingCustomer = sqliteHelper.selectSpecificCustomerID(CustomerId);
+
+        // then we let the update commence.
+        customer = sqliteHelper.updateExistingCustomer(existingCustomer);
+
+        // write out the result of the update
+        output=
+                customer.getCustomerFirstname()+", "+
+                        customer.getCustomerLastname()+", "+
+                        customer.getCustomerCountry()+"," +
+                        customer.getCustomerPostalCode()+"," +
+                        customer.getCustomerPhoneNumber()+"," +
+                        customer.getCustomerEmail()+". ";
+
+        return output;
+    }
+
+    //-- get ordered customers by the customers, who have spent the most on the music site.
+    @GetMapping("/Customers/totalSpent")
+    public ArrayList<String> customerBigSpender() throws SQLException
+    {
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<String>();
+        SqliteHelper sqliteHelper = new SqliteHelper();
+        ArrayList<CustomerSpender> customers = sqliteHelper.orderCustomerByBiggestSpender();
+
+        if(customers.size() != 0) {
+            for (CustomerSpender c : customers) {
+                output=
+                        c.getFirstname()+", "+
+                                c.getLastname()+", "+
+                                c.getTotalSpent()+". ";
+                outputs.add(output);
+            }}
+        return outputs;
+    }
+
+    //-- get ordered customers by the customers, who have spent the most on the music site.
+    @GetMapping("/Customers/countries")
+    public ArrayList<String> customerNumberByCountry() throws SQLException
+    {
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<String>();
+        SqliteHelper sqliteHelper = new SqliteHelper();
+        ArrayList<CustomerCountry> customers = sqliteHelper.orderCustomerByCountry();
+
+        if(customers.size() != 0) {
+            for (CustomerCountry c : customers) {
+                output=
+                                c.getCountry()+", "+
+                                c.getTotalNumberOfCustomer()+". ";
                 outputs.add(output);
             }}
         return outputs;
