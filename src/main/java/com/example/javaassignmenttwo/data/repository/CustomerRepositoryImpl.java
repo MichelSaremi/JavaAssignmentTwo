@@ -1,11 +1,13 @@
-package com.example.javaassignmenttwo.data;
+package com.example.javaassignmenttwo.data.repository;
 
 import com.example.javaassignmenttwo.model.*;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CustomerRepository {
+@Repository
+public class CustomerRepositoryImpl {
     // Setup
     static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
     Connection conn = null;

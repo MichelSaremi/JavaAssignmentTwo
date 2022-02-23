@@ -1,7 +1,7 @@
 package com.example.javaassignmenttwo.controller;
 
 import com.example.javaassignmenttwo.*;
-import com.example.javaassignmenttwo.data.CustomerRepository;
+import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
 import com.example.javaassignmenttwo.model.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +19,7 @@ public class CustomerController {
     public ArrayList<String> allCustomers(){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         ArrayList<Customer> customers = customerRepository.selectAllCustomers();
         if(customers.size() != 0) {
             for (Customer c : customers) {
@@ -40,7 +40,7 @@ public class CustomerController {
     @GetMapping("/Customers/id/{id}")
     public String customerById( @PathVariable("id") String id){
         String output;
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         Customer c = customerRepository.selectSpecificCustomerID(id);
         output=
                 c.getCustomerId()+", "+
@@ -58,7 +58,7 @@ public class CustomerController {
     public ArrayList<String> customerByName( @PathVariable("name") String name){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName(name);
         if(customers.size() != 0) {
             for (Customer c : customers) {
@@ -80,7 +80,7 @@ public class CustomerController {
     public ArrayList<String> customerByName( @PathVariable("offset") int offset, @PathVariable("limit") int limit){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(offset,limit);
         if(customers.size() != 0) {
             for (Customer c : customers) {
@@ -107,7 +107,7 @@ public class CustomerController {
 
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        CustomerRepository sqliteHelper = new CustomerRepository();
+        CustomerRepositoryImpl sqliteHelper = new CustomerRepositoryImpl();
         newCustomer = sqliteHelper.addNewCustomer(newCustomer);
 
         output=
@@ -124,7 +124,7 @@ public class CustomerController {
     public String customerUpdateExisting(@RequestParam("CustomerId") String CustomerId, @RequestParam String firstname, @RequestParam String lastname, @RequestParam String country, @RequestParam String postalCode, @RequestParam String phoneNumber, @RequestParam String email, @RequestBody Customer customer) throws SQLException
     {
         String output = null;
-        CustomerRepository sqliteHelper = new CustomerRepository();
+        CustomerRepositoryImpl sqliteHelper = new CustomerRepositoryImpl();
         // first get the existing customer by ID, who we wish to update on.
         Customer existingCustomer = new Customer(CustomerId, firstname, lastname, country, postalCode, phoneNumber, email);
 
@@ -149,7 +149,7 @@ public class CustomerController {
     {
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         ArrayList<CustomerSpender> customers = customerRepository.orderCustomerByBiggestSpender();
 
         if(customers.size() != 0) {
@@ -169,7 +169,7 @@ public class CustomerController {
     {
         String output = null;
         ArrayList<String> outputs = new ArrayList<String>();
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         ArrayList<CustomerCountry> customers = customerRepository.orderCustomerByCountry();
 
         if(customers.size() != 0) {
@@ -185,7 +185,7 @@ public class CustomerController {
     //---get a customers favourite genre
     @GetMapping("/Customers/genre/{id}")
     public ArrayList<String> customerFavGenre( @PathVariable("id") String id){
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         Program program = new Program();
         Genre favGenre1 = null;
         Genre favGenre2 = null;

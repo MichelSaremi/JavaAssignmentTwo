@@ -1,0 +1,26 @@
+/*package com.example.javaassignmenttwo.view;
+
+import com.example.javaassignmenttwo.data.services.CustomerServiceImpl;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class CustomerController {
+    private final CustomerServiceImpl customerService;
+
+    public CustomerController(
+            CustomerServiceImpl customerService ) {
+
+        this.customerService = customerService;
+    }
+    @GetMapping("/list")
+    public String view(
+            Model model
+    ){
+        model.addAttribute("customers", customerService.getAll());
+        return "customers";
+    }
+}*/
+
+//--breaks application needs fix

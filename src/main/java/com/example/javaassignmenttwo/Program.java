@@ -1,6 +1,6 @@
 package com.example.javaassignmenttwo;
 
-import com.example.javaassignmenttwo.data.CustomerRepository;
+import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
 import com.example.javaassignmenttwo.model.*;
 
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.util.*;
 public class Program {
 
     public static void main(String[] args) throws SQLException {
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         //ArrayList<Customer> customers = customerRepository.selectAllCustomers();
         //ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName("Mark");
         //ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(12,4);
@@ -142,7 +142,7 @@ public class Program {
     //---Display users most popular genre
     public static void mostPopularGenre(String id ){
 
-        CustomerRepository customerRepository = new CustomerRepository();
+        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
 
         //---link customer ID to invoice ID
         ArrayList<CustomerInvoice> customerInvoices = customerRepository.selectAllInvoiceByID(id);
