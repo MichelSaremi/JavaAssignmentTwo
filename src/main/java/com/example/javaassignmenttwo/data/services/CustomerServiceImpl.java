@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class CustomerServiceImpl {
+public class CustomerServiceImpl implements CustomerService{
 
     private final CustomerRepositoryImpl customerRepository;
 
