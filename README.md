@@ -2,6 +2,8 @@
 
 This is project was finished as an assignment from Experis Academy.
 
+In the application.properties we annotated server.port=5050
+
 The REST endpoints can be accessed and tried out on http://localhost:5050/swagger-ui/index.html
 
 Thymeleaf was used also. View classes and html templates were contructed.
