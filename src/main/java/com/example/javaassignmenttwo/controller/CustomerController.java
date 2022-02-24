@@ -27,14 +27,14 @@ public class CustomerController {
     }
 
     //---get a specific customer based on ID
-    @GetMapping("/Customers/id/{id}")
-    public String customerById( @PathVariable("id") String id){
+    @GetMapping("/Customers/id/{custemorId}")
+    public String customerById( @PathVariable("custemorId") String id){
         return customerService.getCustomerById(id);
     }
 
     //---get a specific customer based on name
-    @GetMapping("/Customers/name/{name}")
-    public ArrayList<String> customerByName( @PathVariable("name") String name){
+    @GetMapping("/Customers/name/{customerName}")
+    public ArrayList<String> customerByName( @PathVariable("customerName") String name){
         return customerService.getCustomerByName(name);
     }
 
@@ -73,8 +73,8 @@ public class CustomerController {
     }
 
     //---get a customers favourite genre
-    @GetMapping("/Customers/favgenre/{id}")
-    public ArrayList<String> customerFavGenre( @PathVariable("id") int cid){
+    @GetMapping("/Customers/favgenre/{customerId}")
+    public ArrayList<String> customerFavGenre( @PathVariable("customerId") int cid){
         ArrayList<String> favGenre = customerService.getFavGenre(cid);
         return favGenre;
     }
