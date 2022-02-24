@@ -2,9 +2,34 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>TryOut</title>
+    <title>Music API Home page</title>
 </head>
 <body>
-    <h1>Hello <span th:text="${greeting}"></span>!</h1>
+<div>
+    <h1>Five random artists</h1>
+    <ul th:each="A:${artists}">
+        <li th:text="${A.getArtistName()}"></li>
+    </ul>
+
+    <h1>Five random songs</h1>
+    <ul th:each="S:${songs}">
+        <li th:text="${S.getSongName()}"></li>
+    </ul>
+
+    <h1>Five random genre</h1>
+    <ul th:each="G:${genre}">
+        <li th:text="${G.getName()}"></li>
+    </ul>
+
+   <!--- <form th:action="@{/result}" th:object="${music}" method="post">
+        <div>
+            <label for="Track">Search tracks</label>
+            <input id="Track" type="text" th:field="*{songName}" />
+        </div>
+        <div>
+            <input type="submit" value="Submit" />
+        </div>
+    </form> -->
+</div>
 </body>
 </html>

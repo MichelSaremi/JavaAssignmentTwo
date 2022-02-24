@@ -1,6 +1,7 @@
 package com.example.javaassignmenttwo;
 
 import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
+import com.example.javaassignmenttwo.data.repository.MusicRepositoryImpl;
 import com.example.javaassignmenttwo.model.*;
 
 import java.sql.SQLException;
@@ -9,16 +10,17 @@ import java.util.*;
 public class Program {
 
     public static void main(String[] args) throws SQLException {
-        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
+        //CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         //ArrayList<Customer> customers = customerRepository.selectAllCustomers();
         //ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName("Mark");
         //ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(12,4);
         //Customer customer = customerRepository.selectSpecificCustomerID("55");
         //printCustomers(customers);
         //printCustomer(customer);
-
-
-        mostPopularGenre("1");
+        MusicRepositoryImpl musicRepository = new MusicRepositoryImpl();
+        Music musics = musicRepository.selectSpecificMusic(1);
+        printMusic(musics);
+        //mostPopularGenre("1");
 
         /**
          * Added function calls to task 5, 6, 7 and 8 here. I needed to nest these calls inside a try catch statement to check the SQL setup and query were correct.
@@ -32,6 +34,20 @@ public class Program {
 
 
     }
+    //---print all music
+    public static void printMusic(Music mu) {
+        if(mu  != null) {
+                System.out.println("-------------------------------");
+                System.out.println(mu.getTrackId());
+                System.out.println(mu.getSongName());
+                System.out.println(mu.getArtistName());
+                System.out.println(mu.getGenreId());
+
+        } else {
+            System.out.println("No music");
+        }
+    }
+
 
     //---method to sort a Hashmap by value
     public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) {
@@ -140,7 +156,7 @@ public class Program {
     }
 
     //---Display users most popular genre
-    public static void mostPopularGenre(String id ){
+    public static void mostPopularGenre(int id ){
 
         CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
 
@@ -205,15 +221,15 @@ public class Program {
         //---If the first two values are tied
         //---display both genre
         if (mapValues.get(0) == mapValues.get(1)){
-            Genre favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
-            Genre favGenre2 = customerRepository.selectFavGenre(mapKeys.get(1));
+            Genre favGenre1 = customerRepository.selectSpecificGenre(Integer.parseInt(mapKeys.get(0)));
+            Genre favGenre2 = customerRepository.selectSpecificGenre(Integer.parseInt(mapKeys.get(1)));
             System.out.println("Users most favourite genre");
             printGenre(favGenre1);
             printGenre(favGenre2);
 
         //---else display the first genre
         }else if (mapValues.get(0) != mapValues.get(1)){
-            Genre favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
+            Genre favGenre1 = customerRepository.selectSpecificGenre(Integer.parseInt(mapKeys.get(0)));
             System.out.println("Users most favourite genre");
             printGenre(favGenre1);
         }

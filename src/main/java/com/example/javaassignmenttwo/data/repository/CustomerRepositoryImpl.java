@@ -7,10 +7,10 @@ import java.sql.*;
 import java.util.ArrayList;
 
 @Repository
-public class CustomerRepositoryImpl {
+public class CustomerRepositoryImpl implements CustomerRepository {
     // Setup
     static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
-    Connection conn = null;
+    static Connection conn = null;
 
 
 
@@ -206,7 +206,7 @@ public class CustomerRepositoryImpl {
     }
 
     //---reading all user invoice from database
-    public ArrayList<CustomerInvoice> selectAllInvoiceByID(String id){
+    public ArrayList<CustomerInvoice> selectAllInvoiceByID(int id){
         ArrayList<CustomerInvoice> customerInvoices = new ArrayList<CustomerInvoice>();
 
         try {
@@ -218,7 +218,7 @@ public class CustomerRepositoryImpl {
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT InvoiceId,CustomerId FROM Invoice WHERE CustomerId = ?");
 
-            preparedStatement.setString(1, id);
+            preparedStatement.setInt(1, id);
             // Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -330,8 +330,8 @@ public class CustomerRepositoryImpl {
         }
     }
 
-    //---reading all genre from database
-    public Genre selectFavGenre(String genreID){
+    //---reading specific genre from database
+    public static Genre selectSpecificGenre(int genreID){
         Genre genre = null;
 
         try {
@@ -342,7 +342,7 @@ public class CustomerRepositoryImpl {
             // Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT GenreId,Name FROM Genre WHERE GenreId = ?");
-            preparedStatement.setString(1, genreID);
+            preparedStatement.setInt(1, genreID);
             // Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 

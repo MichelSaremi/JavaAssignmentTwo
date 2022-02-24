@@ -2,6 +2,7 @@ package com.example.javaassignmenttwo.controller;
 
 import com.example.javaassignmenttwo.*;
 import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
+import com.example.javaassignmenttwo.data.services.CustomerServiceImpl;
 import com.example.javaassignmenttwo.model.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -183,79 +184,9 @@ public class CustomerController {
     }
 
     //---get a customers favourite genre
-    @GetMapping("/Customers/genre/{id}")
-    public ArrayList<String> customerFavGenre( @PathVariable("id") String id){
-        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
-        Program program = new Program();
-        Genre favGenre1 = null;
-        Genre favGenre2 = null;
-
-        //---link customer ID to invoice ID
-        ArrayList<CustomerInvoice> customerInvoices = customerRepository.selectAllInvoiceByID(id);
-
-        //---Link invoice ID to track ID
-        ArrayList<InvoiceLine> UserInvoiceLines = new ArrayList<InvoiceLine>();
-        for (CustomerInvoice ci : customerInvoices) {
-            String InvoiceID = ci.getInvoiceId();
-
-            ArrayList<InvoiceLine> UserInvoiceLine = customerRepository.selectUserInvoiceLines(InvoiceID);
-            UserInvoiceLines.addAll(UserInvoiceLine);
-        }
-
-        //---link track ID to genre ID
-        ArrayList<Track> UserTracks = new ArrayList<Track>();
-        for (InvoiceLine uil : UserInvoiceLines) {
-            String trackID = uil.getTrackId();
-
-
-            ArrayList<Track> UserTrack = customerRepository.selectTracks(trackID);
-            UserTracks.addAll(UserTrack);
-        }
-
-        //---Sort Track objects according to genreID
-        Collections.sort(UserTracks,new Comparator<Track>(){
-            public int compare(Track t1, Track t2){
-                return t2.getGenreId().compareTo(t1.getGenreId());
-            }});
-
-        //---Extract the genre ID for the user and put in new list
-        ArrayList<String> genrelist = new ArrayList<String>();
-        for (int i = 0; i<UserTracks.size();i++){
-            genrelist.add(UserTracks.get(i).getGenreId());
-        }
-
-        //---Put each genre ID in a hash-map as key with its frequency as value
-        HashMap<String,Integer> genreMap = new HashMap<String,Integer>();
-        for(String s: genrelist){
-            genreMap.put(s, Collections.frequency(genrelist,s));
-        }
-
-        //---Sort hashmap according to value
-        Map<String, Integer> newMap = program.sortByValue(genreMap);
-
-        //---extract keys(Genre ID) and values(frequency) into seperate lists
-        ArrayList<String> mapKeys = new ArrayList<>();
-        ArrayList<String> mapValues = new ArrayList<>();
-
-        newMap.keySet().forEach(key -> mapKeys.add(key));
-        newMap.values().forEach(val -> mapValues.add(String.valueOf(val)));
-
-        //---If the first two values are tied
-        //---display both genre
-        ArrayList<String> genre = new ArrayList<>();
-
-        if (mapValues.get(0) == mapValues.get(1)){
-            favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
-            favGenre2 = customerRepository.selectFavGenre(mapKeys.get(1));
-            genre.add(favGenre1.getName());
-            genre.add(favGenre2.getName());
-
-            //---else display the first genre
-        }else if (mapValues.get(0) != mapValues.get(1)){
-            favGenre1 = customerRepository.selectFavGenre(mapKeys.get(0));
-            genre.add(favGenre1.getName());
-        }
-        return genre;
+    @GetMapping("/Customers/favgenre/{id}")
+    public ArrayList<String> customerFavGenre( @PathVariable("id") int cid){
+        ArrayList<String> favGenre = CustomerServiceImpl.getFavGenre(cid);
+        return favGenre;
     }
-
 }
