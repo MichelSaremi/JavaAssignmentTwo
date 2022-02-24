@@ -26,8 +26,8 @@ public class HomeController {
             Model model
     ){
         Music music = new Music();
-        model.addAttribute("artists", musicService.getFiveMusic());
-        model.addAttribute("songs", musicService.getFiveMusic());
+        model.addAttribute("artists", musicService.getFiveArtists());
+        model.addAttribute("songs", musicService.getFiveSongs());
         model.addAttribute("genre", musicService.getFiveGenre());
         return "home";
     }

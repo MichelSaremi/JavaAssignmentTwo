@@ -19,35 +19,57 @@ public class MusicServiceImpl implements MusicService{
         this.musicRepository = musicRepository;
     }
 
-    //---generate an arraylist with five music objects
-    public ArrayList<Music> getFiveMusic() {
+    //---generate an arraylist with five artist names
+    public ArrayList<String> getFiveArtists() {
 
         ArrayList<Music> alltracks = musicRepository.selectAllMusic();
-        ArrayList<Music> fivetracks = new ArrayList<>();
+        ArrayList<String> fiveArtists = new ArrayList<>();
 
         //---make sure artist name is there
         for (int i = 0; i < 5; i++) {
             int randomNumber = (ThreadLocalRandom.current().nextInt(1, alltracks.size() + 1));
-            if (musicRepository.selectSpecificMusic(randomNumber).getArtistName() != null) {
-                fivetracks.add(musicRepository.selectSpecificMusic(randomNumber));
+            if (musicRepository.selectSpecificMusic(randomNumber).getArtistName() != null && !fiveArtists.contains(musicRepository.selectSpecificMusic(randomNumber).getArtistName())) {
+                fiveArtists.add(musicRepository.selectSpecificMusic(randomNumber).getArtistName());
             } else {
                 i--;
             }
         }
-        return fivetracks;
+        return fiveArtists;
     }
 
+    //---generate an arraylist with five song names
+    public ArrayList<String> getFiveSongs() {
+
+        ArrayList<Music> alltracks = musicRepository.selectAllMusic();
+        ArrayList<String> fiveSongs = new ArrayList<>();
+
+        //---make sure artist name is there
+        for (int i = 0; i < 5; i++) {
+            int randomNumber = (ThreadLocalRandom.current().nextInt(1, alltracks.size() + 1));
+            if (!fiveSongs.contains(musicRepository.selectSpecificMusic(randomNumber).getSongName())) {
+                fiveSongs.add(musicRepository.selectSpecificMusic(randomNumber).getSongName());
+            } else {
+                i--;
+            }
+        }
+        return fiveSongs;
+    }
+
+
     //---generate an arraylist of five genre objects
-    public ArrayList<Genre> getFiveGenre() {
+    public ArrayList<String> getFiveGenre() {
 
         ArrayList<Genre> allgenre = musicRepository.selectAllGenre();
-        ArrayList<Genre> fivegenre = new ArrayList<>();
+        ArrayList<String> fivegenre = new ArrayList<>();
 
         //---make sure artist name is there
         for (int i = 0; i < 5; i++) {
             int randomNumber = (ThreadLocalRandom.current().nextInt(1, allgenre.size() + 1));
-            fivegenre.add(CustomerRepositoryImpl.selectSpecificGenre(randomNumber));
-
+            if(!fivegenre.contains(CustomerRepositoryImpl.selectSpecificGenre(randomNumber).getName())) {
+                fivegenre.add(CustomerRepositoryImpl.selectSpecificGenre(randomNumber).getName());
+            }else{
+                i--;
+            }
         }
         return fivegenre;
 
