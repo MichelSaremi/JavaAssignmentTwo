@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your search results</title>
+</head>
+<body>
+    <div>
+        <h1>Search Result</h1>
+        <ul th:each="result: ${searchResults}">
+            <li th:text="${result.getTrackName()}"></li>
+            <li th:text="${result.getArtist()}"></li>
+            <li th:text="${result.getAlbum()}"></li>
+            <li th:text="${result.getGenre()}"></li>
+        </ul>
+    </div>
+</body>
+</html>

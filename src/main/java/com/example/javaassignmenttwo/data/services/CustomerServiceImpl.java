@@ -3,7 +3,9 @@ package com.example.javaassignmenttwo.data.services;
 import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
 import com.example.javaassignmenttwo.model.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Service
@@ -17,11 +19,138 @@ public class CustomerServiceImpl implements CustomerService{
         this.customerRepository = customerRepository;
     }
 
+    public String getCustomerById( @PathVariable("id") String id){
+        String output;
+        Customer c = customerRepository.selectSpecificCustomerID(id);
+        output=
+                c.getCustomerId()+", "+
+                        c.getCustomerFirstname()+", "+
+                        c.getCustomerLastname()+", "+
+                        c.getCustomerCountry()+", "+
+                        c.getCustomerPostalCode()+", "+
+                        c.getCustomerPhoneNumber()+", "+
+                        c.getCustomerEmail()+". ";
+        return output;
+    }
+
+    public ArrayList<String> getCustomerByName( @PathVariable("name") String name){
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<>();
+        ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName(name);
+        if(customers.size() != 0) {
+            for (Customer c : customers) {
+                output=
+                        c.getCustomerId()+", "+
+                                c.getCustomerFirstname()+", "+
+                                c.getCustomerLastname()+", "+
+                                c.getCustomerCountry()+", "+
+                                c.getCustomerPostalCode()+", "+
+                                c.getCustomerPhoneNumber()+", "+
+                                c.getCustomerEmail()+". ";
+                outputs.add(output);
+            }}
+        return outputs;
+    }
+
+    public ArrayList<String> getSubsetOfCustomers(@PathVariable("offset") int offset, @PathVariable("limit") int limit){
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<>();
+        //CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
+        ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(offset,limit);
+        if(customers.size() != 0) {
+            for (Customer c : customers) {
+                output=
+                        c.getCustomerId()+", "+
+                                c.getCustomerFirstname()+", "+
+                                c.getCustomerLastname()+", "+
+                                c.getCustomerCountry()+", "+
+                                c.getCustomerPostalCode()+", "+
+                                c.getCustomerPhoneNumber()+", "+
+                                c.getCustomerEmail()+". ";
+                outputs.add(output);
+            }}
+        return outputs;
+    }
 
     public ArrayList<Customer> getAll() { return customerRepository.selectAllCustomers(); }
 
-    public static ArrayList<String> getFavGenre(int customerid){
-        CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
+    public String addNewCustomer(String firstname, String lastname, String country, String postalCode, String phoneNumber, String email) throws SQLException
+    {
+        // normally we would get an input from the view, here we're setting the parameters for the new customer!
+        Customer newCustomer = new Customer("-1", firstname, lastname, country, postalCode, phoneNumber, email);
+
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<String>();
+        newCustomer = customerRepository.addNewCustomer(newCustomer);
+
+        output=
+                newCustomer.getCustomerFirstname()+", "+
+                        newCustomer.getCustomerLastname()+", "+
+                        newCustomer.getCustomerCountry()+"," +
+                        newCustomer.getCustomerPostalCode()+"," +
+                        newCustomer.getCustomerPhoneNumber()+"," +
+                        newCustomer.getCustomerEmail()+". ";
+        return output;
+    }
+
+    public String updateExistingCustomer(String CustomerId, String firstname, String lastname, String country, String postalCode, String phoneNumber, String email) throws SQLException
+    {
+        String output = null;
+        //CustomerRepositoryImpl sqliteHelper = new CustomerRepositoryImpl(null);
+        // first get the existing customer by ID, who we wish to update on.
+        Customer existingCustomer = new Customer(CustomerId, firstname, lastname, country, postalCode, phoneNumber, email);
+
+        // then we let the update commence.
+        existingCustomer = customerRepository.updateExistingCustomer(existingCustomer);
+
+        // write out the result of the update
+        output=
+                existingCustomer.getCustomerFirstname()+", "+
+                        existingCustomer.getCustomerLastname()+", "+
+                        existingCustomer.getCustomerCountry()+"," +
+                        existingCustomer.getCustomerPostalCode()+"," +
+                        existingCustomer.getCustomerPhoneNumber()+"," +
+                        existingCustomer.getCustomerEmail()+". ";
+
+        return output;
+    }
+
+    public ArrayList<String> getNumberByCountry() throws SQLException
+    {
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<String>();
+        ArrayList<CustomerCountry> customers = customerRepository.orderCustomerByCountry();
+
+        if(customers.size() != 0) {
+            for (CustomerCountry c : customers) {
+                output=
+                        c.getCountry()+", "+
+                                c.getTotalNumberOfCustomer()+". ";
+                outputs.add(output);
+            }}
+        return outputs;
+    }
+
+    public ArrayList<String> getBiggestSpender() throws SQLException
+    {
+        String output = null;
+        ArrayList<String> outputs = new ArrayList<String>();
+        //CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl(null);
+        ArrayList<CustomerSpender> customers = customerRepository.orderCustomerByBiggestSpender();
+
+        if(customers.size() != 0) {
+            for (CustomerSpender c : customers) {
+                output=
+                        c.getFirstname()+", "+
+                                c.getLastname()+", "+
+                                c.getTotalSpent()+". ";
+                outputs.add(output);
+            }}
+        return outputs;
+    }
+
+    public ArrayList<String> getFavGenre(int customerid){
+        //CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         Genre favGenre1 = null;
         Genre favGenre2 = null;
 

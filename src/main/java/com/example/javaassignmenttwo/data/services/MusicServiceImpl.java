@@ -65,8 +65,8 @@ public class MusicServiceImpl implements MusicService{
         //---make sure artist name is there
         for (int i = 0; i < 5; i++) {
             int randomNumber = (ThreadLocalRandom.current().nextInt(1, allgenre.size() + 1));
-            if(!fivegenre.contains(CustomerRepositoryImpl.selectSpecificGenre(randomNumber).getName())) {
-                fivegenre.add(CustomerRepositoryImpl.selectSpecificGenre(randomNumber).getName());
+            if(!fivegenre.contains(musicRepository.selectSpecificGenre(randomNumber).getName())) {
+                fivegenre.add(musicRepository.selectSpecificGenre(randomNumber).getName());
             }else{
                 i--;
             }

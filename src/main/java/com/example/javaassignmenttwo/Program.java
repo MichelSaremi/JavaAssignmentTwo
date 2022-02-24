@@ -17,9 +17,9 @@ public class Program {
         //Customer customer = customerRepository.selectSpecificCustomerID("55");
         //printCustomers(customers);
         //printCustomer(customer);
-        MusicRepositoryImpl musicRepository = new MusicRepositoryImpl();
-        Music musics = musicRepository.selectSpecificMusic(1);
-        printMusic(musics);
+        //MusicRepositoryImpl musicRepository = new MusicRepositoryImpl();
+        //Music musics = musicRepository.selectSpecificMusic(1);
+        //printMusic(musics);
         //mostPopularGenre("1");
 
         /**
@@ -156,6 +156,7 @@ public class Program {
     }
 
     //---Display users most popular genre
+    /*
     public static void mostPopularGenre(int id ){
 
         CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
@@ -234,4 +235,6 @@ public class Program {
             printGenre(favGenre1);
         }
     }
+
+     */
 }

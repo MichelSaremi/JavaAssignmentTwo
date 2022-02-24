@@ -8,6 +8,13 @@ import java.util.ArrayList;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
+    private final DatabaseConnectionFactory connectionFactory;
+
+    public CustomerRepositoryImpl(DatabaseConnectionFactory connectionFactory)
+    {
+        this.connectionFactory = connectionFactory;
+    }
+
     // Setup
     static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
     static Connection conn = null;
@@ -331,12 +338,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     }
 
     //---reading specific genre from database
-    public static Genre selectSpecificGenre(int genreID){
+    public Genre selectSpecificGenre(int genreID){
         Genre genre = null;
 
-        try {
+        try (Connection conn = connectionFactory.getConnection()){
             // Open Connection
-            conn = DriverManager.getConnection(URL);
+            //conn = connectionFactory.getConnection();
             System.out.println("Connection to SQLite has been established.");
 
             // Prepare Statement
@@ -374,8 +381,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     // task 5, add a new customer
     public Customer addNewCustomer(Customer newCustomer) throws SQLException
     {
-        try {
-            conn = ConnectionManager.getInstance().getConnection();
+        try (Connection conn = connectionFactory.getConnection()){
+            //conn = connectionFactory.getConnection();
 
             // use this dummy data only, if the method runs via Program class, to only run on the DB side of things (ignoring API endpoint).
             if (newCustomer == null)
@@ -406,6 +413,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.printf("Customer {%d,%s,%s} has now been added to the Customer table \n", id, firstname, lastname);
         }
         finally {
+            /*
             try {
                 // Close Connection
                 conn.close();
@@ -414,6 +422,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 System.out.println("Something went wrong while closing connection.");
                 System.out.println(ex.toString());
             }
+             */
             return newCustomer;
         }
     }
@@ -421,8 +430,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     // task 6, update an existing customer
     public Customer updateExistingCustomer(Customer existingCustomer) throws SQLException
     {
-        try {
-            conn = ConnectionManager.getInstance().getConnection();
+        try (Connection conn = connectionFactory.getConnection()){
+            //conn = connectionFactory.getConnection();
 
             // use this dummy data only, if the method runs via Program class, to only run on the DB side of things (ignoring API endpoint).
             if (existingCustomer == null)
@@ -452,6 +461,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.printf("Customer {%d,%s,%s} has now been updated in the Customer table \n", id, firstname, lastname);
         }
         finally {
+            /*
             try {
                 // Close Connection
                 conn.close();
@@ -460,6 +470,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 System.out.println("Something went wrong while closing connection.");
                 System.out.println(ex.toString());
             }
+             */
             return existingCustomer;
         }
     }
@@ -469,9 +480,9 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     {
         ArrayList<CustomerSpender> queryResult = new ArrayList<CustomerSpender>();
 
-        try
+        try (Connection conn = connectionFactory.getConnection())
         {
-            Connection conn = ConnectionManager.getInstance().getConnection();
+            //conn = connectionFactory.getConnection();
             PreparedStatement prepStatement = conn.prepareStatement("SELECT FirstName, LastName, Customer.CustomerId, SUM(Total) FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.FirstName, Customer.LastName, Customer.CustomerId ORDER BY SUM(Total) DESC;");
             ResultSet resultset = prepStatement.executeQuery();
 
@@ -492,6 +503,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
+            /*
             try {
                 // Close Connection
                 conn.close();
@@ -499,6 +511,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 System.out.println("Something went wrong while closing connection.");
                 System.out.println(ex.toString());
             }
+            */
             return queryResult;
         }
     }
@@ -508,8 +521,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     {
         ArrayList<CustomerCountry> queryResult = new ArrayList<CustomerCountry>();
 
-        try {
-            Connection conn = ConnectionManager.getInstance().getConnection();
+        try (Connection conn = connectionFactory.getConnection()){
+            //DevConnectionManager.getInstance().getConnection();
             PreparedStatement prepStatement = conn.prepareStatement("SELECT Country,COUNT(CustomerId) FROM Customer GROUP BY Country ORDER BY COUNT(CustomerId) DESC");
             ResultSet resultset = prepStatement.executeQuery();
 
@@ -527,14 +540,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println(ex.toString());
         }
         finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex) {
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
 
             return queryResult;
         }

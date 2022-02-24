@@ -2,25 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Music API Home page</title>
+    <title>Search for tracks</title>
 </head>
 <body>
-<div>
-    <h1>Five random artists</h1>
-    <ul th:each="A:${artists}">
-        <li th:text="${A}"></li>
-    </ul>
-
-    <h1>Five random songs</h1>
-    <ul th:each="S:${songs}">
-        <li th:text="${S}"></li>
-    </ul>
-
-    <h1>Five random genre</h1>
-    <ul th:each="G:${genre}">
-        <li th:text="${G}"></li>
-    </ul>
-
     <form th:action="@{/processSearch}" th:object="${searchTracks}" method="post">
         <div>
             <label for="TrackTitle">Track title: </label>
@@ -28,6 +12,5 @@
             <input type="submit" value="Submit" />
         </div>
     </form>
-</div>
 </body>
 </html>

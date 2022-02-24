@@ -13,6 +13,13 @@ import java.util.ArrayList;
 
 @Repository
 public class MusicRepositoryImpl implements MusicRepository {
+    private final DatabaseConnectionFactory connectionFactory;
+
+    public MusicRepositoryImpl(DatabaseConnectionFactory connectionFactory)
+    {
+        this.connectionFactory = connectionFactory;
+    }
+
     // Setup
     static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
     Connection conn = null;
@@ -23,7 +30,7 @@ public class MusicRepositoryImpl implements MusicRepository {
 
         try {
             // Open Connection
-            conn = DriverManager.getConnection(URL);
+            conn = connectionFactory.getConnection();
             System.out.println("Connection to SQLite has been established.");
 
             // Prepare Statement
@@ -67,7 +74,7 @@ public class MusicRepositoryImpl implements MusicRepository {
         Music music = null;
         try {
             // Open Connection
-            conn = DriverManager.getConnection(URL);
+            conn = connectionFactory.getConnection();
             System.out.println("Connection to SQLite has been established.");
 
             // Prepare Statement
@@ -110,7 +117,7 @@ public class MusicRepositoryImpl implements MusicRepository {
 
         try {
             // Open Connection
-            conn = DriverManager.getConnection(URL);
+            conn = connectionFactory.getConnection();
             System.out.println("Connection to SQLite has been established.");
 
             // Prepare Statement
@@ -144,6 +151,46 @@ public class MusicRepositoryImpl implements MusicRepository {
             return allgenre;
         }
     }
-    
+
+
+    public Genre selectSpecificGenre(int genreID){
+        Genre genre = null;
+
+        try (Connection conn = connectionFactory.getConnection()){
+            // Open Connection
+            //conn = connectionFactory.getConnection();
+            System.out.println("Connection to SQLite has been established.");
+
+            // Prepare Statement
+            PreparedStatement preparedStatement =
+                    conn.prepareStatement("SELECT GenreId,Name FROM Genre WHERE GenreId = ?");
+            preparedStatement.setInt(1, genreID);
+            // Execute Statement
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Process Results
+            while (resultSet.next()) {
+                genre = new Genre(
+                        resultSet.getString("GenreId"),
+                        resultSet.getString("Name")
+                );
+            }
+        }
+        catch (Exception ex){
+            System.out.println("Something went wrong...");
+            System.out.println(ex.toString());
+        }
+        finally {
+            try {
+                // Close Connection
+                conn.close();
+            }
+            catch (Exception ex){
+                System.out.println("Something went wrong while closing connection.");
+                System.out.println(ex.toString());
+            }
+            return genre;
+        }
+    }
 
 }
