@@ -1,7 +1,5 @@
 package com.example.javaassignmenttwo.controller;
 
-import com.example.javaassignmenttwo.*;
-import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
 import com.example.javaassignmenttwo.data.services.CustomerServiceImpl;
 import com.example.javaassignmenttwo.model.*;
 import org.springframework.web.bind.annotation.*;
@@ -11,17 +9,18 @@ import java.sql.SQLException;
 import java.util.*;
 
 @RestController
-//@Tag(name = "All customers")
 public class CustomerController {
 
     private final CustomerServiceImpl customerService;
 
+    //---constructor
     public CustomerController(CustomerServiceImpl customerService)
     {
         this.customerService = customerService;
     }
-    //@Operation(summary =
-    //---get all customers
+
+    //---URL mappings
+    //---getting all customers
     @GetMapping("/Customers")
     public ArrayList<Customer> allCustomers(){
         return customerService.getAll();
@@ -45,27 +44,28 @@ public class CustomerController {
         return customerService.getSubsetOfCustomers(offset, limit);
     }
 
-    //-- get ordered customers by the customers, who have spent the most on the music site.
+    //-- get ordered customers based on who have spent the most on the music site.
     @PostMapping("Customers/add")
     public String customerAddNew(@RequestBody Customer customer, @RequestParam String firstname, @RequestParam String lastname, @RequestParam String country, @RequestParam String postalCode, @RequestParam String phoneNumber, @RequestParam String email) throws SQLException
     {
         return customerService.addNewCustomer(firstname, lastname, country, postalCode, phoneNumber, email);
     }
 
+    //---update customer
     @PutMapping("Customers/update/{CustomerId}")
     public String customerUpdateExisting(@RequestParam("CustomerId") String CustomerId, @RequestParam String firstname, @RequestParam String lastname, @RequestParam String country, @RequestParam String postalCode, @RequestParam String phoneNumber, @RequestParam String email, @RequestBody Customer customer) throws SQLException
     {
         return customerService.updateExistingCustomer(CustomerId, firstname, lastname, country, postalCode, phoneNumber, email);
     }
 
-    //-- get ordered customers by the customers, who have spent the most on the music site.
+    //-- get ordered customers based on who spent the most on the music site.
     @GetMapping("/Customers/totalSpent")
     public ArrayList<String> customerBigSpender() throws SQLException
     {
         return customerService.getBiggestSpender();
     }
 
-    //-- get ordered customers by the customers, who have spent the most on the music site.
+    //-- get ordered list of coutomer-count by countries
     @GetMapping("/Customers/countries")
     public ArrayList<String> customerNumberByCountry() throws SQLException
     {

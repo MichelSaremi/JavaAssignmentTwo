@@ -3,7 +3,6 @@ package com.example.javaassignmenttwo.data.services;
 import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
 import com.example.javaassignmenttwo.model.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -11,15 +10,18 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService{
 
+    //---attributes
     private final CustomerRepositoryImpl customerRepository;
 
+    //---constructor
     public CustomerServiceImpl(
             CustomerRepositoryImpl customerRepository
     ) {
         this.customerRepository = customerRepository;
     }
 
-    public String getCustomerById( @PathVariable("id") String id){
+    //---create a customer string based on ID
+    public String getCustomerById( String id){
         String output;
         Customer c = customerRepository.selectSpecificCustomerID(id);
         output=
@@ -33,7 +35,8 @@ public class CustomerServiceImpl implements CustomerService{
         return output;
     }
 
-    public ArrayList<String> getCustomerByName( @PathVariable("name") String name){
+    //---create a customer string based on name
+    public ArrayList<String> getCustomerByName( String name){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
         ArrayList<Customer> customers = customerRepository.selectSpecificCustomersName(name);
@@ -52,10 +55,10 @@ public class CustomerServiceImpl implements CustomerService{
         return outputs;
     }
 
-    public ArrayList<String> getSubsetOfCustomers(@PathVariable("offset") int offset, @PathVariable("limit") int limit){
+    //---Get an array of customer strings based on offset and limit
+    public ArrayList<String> getSubsetOfCustomers(int offset, int limit){
         String output = null;
         ArrayList<String> outputs = new ArrayList<>();
-        //CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         ArrayList<Customer> customers = customerRepository.selectSubsetOfCustomers(offset,limit);
         if(customers.size() != 0) {
             for (Customer c : customers) {
@@ -72,11 +75,14 @@ public class CustomerServiceImpl implements CustomerService{
         return outputs;
     }
 
+    //---Get an arraylist of customer objects
     public ArrayList<Customer> getAll() { return customerRepository.selectAllCustomers(); }
 
+    //---Making a new customer object and using it as a parameter for addNewCustomer
+    //---new customer is outputtet as string
     public String addNewCustomer(String firstname, String lastname, String country, String postalCode, String phoneNumber, String email) throws SQLException
     {
-        // normally we would get an input from the view, here we're setting the parameters for the new customer!
+        //---normally we would get an input from the view, here we're setting the parameters for the new customer!
         Customer newCustomer = new Customer("-1", firstname, lastname, country, postalCode, phoneNumber, email);
 
         String output = null;
@@ -93,17 +99,18 @@ public class CustomerServiceImpl implements CustomerService{
         return output;
     }
 
+    //---Updating existing customer with new input
     public String updateExistingCustomer(String CustomerId, String firstname, String lastname, String country, String postalCode, String phoneNumber, String email) throws SQLException
     {
         String output = null;
-        //CustomerRepositoryImpl sqliteHelper = new CustomerRepositoryImpl(null);
-        // first get the existing customer by ID, who we wish to update on.
+
+        //---we make a new customer object and feed it with data
         Customer existingCustomer = new Customer(CustomerId, firstname, lastname, country, postalCode, phoneNumber, email);
 
-        // then we let the update commence.
+        //---then we update existing customer with object
         existingCustomer = customerRepository.updateExistingCustomer(existingCustomer);
 
-        // write out the result of the update
+        //---write out the result of the update as a string
         output=
                 existingCustomer.getCustomerFirstname()+", "+
                         existingCustomer.getCustomerLastname()+", "+
@@ -115,6 +122,7 @@ public class CustomerServiceImpl implements CustomerService{
         return output;
     }
 
+    //---Make an arraylist of strings, that show number of customers by country
     public ArrayList<String> getNumberByCountry() throws SQLException
     {
         String output = null;
@@ -124,13 +132,14 @@ public class CustomerServiceImpl implements CustomerService{
         if(customers.size() != 0) {
             for (CustomerCountry c : customers) {
                 output=
-                        c.getCountry()+", "+
-                                c.getTotalNumberOfCustomer()+". ";
+                        c.getCountry()+", "+c.getTotalNumberOfCustomer()+". ";
                 outputs.add(output);
             }}
         return outputs;
     }
 
+    //---Get an arraylist of strings
+    //---each string show expenditure per customer
     public ArrayList<String> getBiggestSpender() throws SQLException
     {
         String output = null;
@@ -149,6 +158,7 @@ public class CustomerServiceImpl implements CustomerService{
         return outputs;
     }
 
+    //---Out put the favourite genre of a customer based on ID
     public ArrayList<String> getFavGenre(int customerid){
         //CustomerRepositoryImpl customerRepository = new CustomerRepositoryImpl();
         Genre favGenre1 = null;

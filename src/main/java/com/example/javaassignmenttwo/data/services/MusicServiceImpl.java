@@ -1,6 +1,5 @@
 package com.example.javaassignmenttwo.data.services;
 
-import com.example.javaassignmenttwo.data.repository.CustomerRepositoryImpl;
 import com.example.javaassignmenttwo.data.repository.MusicRepositoryImpl;
 import com.example.javaassignmenttwo.model.Genre;
 import com.example.javaassignmenttwo.model.Music;
@@ -13,6 +12,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MusicServiceImpl implements MusicService{
     private final MusicRepositoryImpl musicRepository;
 
+    //---Constructor
     public MusicServiceImpl(
             MusicRepositoryImpl musicRepository
     ) {
@@ -26,6 +26,7 @@ public class MusicServiceImpl implements MusicService{
         ArrayList<String> fiveArtists = new ArrayList<>();
 
         //---make sure artist name is there
+        //---make sure duplicates are not printed
         for (int i = 0; i < 5; i++) {
             int randomNumber = (ThreadLocalRandom.current().nextInt(1, alltracks.size() + 1));
             if (musicRepository.selectSpecificMusic(randomNumber).getArtistName() != null && !fiveArtists.contains(musicRepository.selectSpecificMusic(randomNumber).getArtistName())) {
@@ -38,6 +39,7 @@ public class MusicServiceImpl implements MusicService{
     }
 
     //---generate an arraylist with five song names
+    //---make sure duplicates are not printed
     public ArrayList<String> getFiveSongs() {
 
         ArrayList<Music> alltracks = musicRepository.selectAllMusic();
@@ -56,7 +58,8 @@ public class MusicServiceImpl implements MusicService{
     }
 
 
-    //---generate an arraylist of five genre objects
+    //---generate an arraylist of five genre names
+    //---make sure duplicates are not printed
     public ArrayList<String> getFiveGenre() {
 
         ArrayList<Genre> allgenre = musicRepository.selectAllGenre();

@@ -14,9 +14,7 @@ public interface RestRepository {
     ArrayList<InvoiceLine> selectUserInvoiceLines(String id);
     ArrayList<Track> selectTracks(String trackID);
 
-    static Genre selectSpecificGenre(int genreID) {
-        return null;
-    }
+    Genre selectSpecificGenre(int genreID);
 
     Customer addNewCustomer(Customer newCustomer) throws SQLException;
     Customer updateExistingCustomer(Customer existingCustomer) throws SQLException;

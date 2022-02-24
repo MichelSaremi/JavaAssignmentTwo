@@ -8,35 +8,33 @@ import java.util.ArrayList;
 
 @Repository
 public class CustomerRepositoryImpl implements CustomerRepository {
+
+    //---attributes
     private final DatabaseConnectionFactory connectionFactory;
 
+    //---constructor
     public CustomerRepositoryImpl(DatabaseConnectionFactory connectionFactory)
     {
         this.connectionFactory = connectionFactory;
     }
-
-    // Setup
-    static final String URL = "jdbc:sqlite:src/main/resources/Chinook_Sqlite.sqlite";
-    static Connection conn = null;
-
 
 
     //---reading all customers from database
     public ArrayList<Customer> selectAllCustomers(){
         ArrayList<Customer> customers = new ArrayList<Customer>();
 
-        try {
-            // Open Connection
-            conn = DriverManager.getConnection(URL);
+        //---Manage Connection
+        try (Connection conn = connectionFactory.getConnection()){
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email FROM Customer");
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 customers.add(
                         new Customer(
@@ -54,36 +52,29 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
+
             return customers;
-        }
+
     }
 
     //---Read a specific customer based on ID
     public Customer selectSpecificCustomerID(String customerId){
         Customer customer = null;
-        try {
-            // Open Connection
-            conn = DriverManager.getConnection(URL);
+
+        //---Manage Connection
+        try (Connection conn = connectionFactory.getConnection()){
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email " +
                             "FROM Customer WHERE CustomerId = ?");
             preparedStatement.setString(1, customerId); // Corresponds to 1st '?' (must match type)
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 customer = new Customer(
                         resultSet.getString("CustomerId"),
@@ -101,37 +92,30 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
+
             return customer;
-        }
+
     }
 
     //---Read a specific customer based on name
     public ArrayList<Customer>  selectSpecificCustomersName(String customerFirstName){
         ArrayList<Customer> customers = new ArrayList<Customer>();
         Customer customer = null;
-        try {
-            // Open Connection
-            conn = DriverManager.getConnection(URL);
+
+        //---Manage Connection
+        try (Connection conn = connectionFactory.getConnection()){
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email " +
                             "FROM Customer WHERE FirstName = ?");
             preparedStatement.setString(1, customerFirstName); // Corresponds to 1st '?' (must match type)
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 customers.add(
                         new Customer(
@@ -150,38 +134,30 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
+
             return customers;
-        }
+
     }
 
     //---Choose a subset of customers
     public ArrayList<Customer> selectSubsetOfCustomers(int offset,int limit){
         ArrayList<Customer> customers = new ArrayList<Customer>();
 
-        try {
-            // Open Connection
-            conn = DriverManager.getConnection(URL);
+        //---Manage Connection
+        try (Connection conn = connectionFactory.getConnection()){
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT CustomerId,FirstName,LastName,Country,PostalCode,Phone,Email FROM Customer WHERE CustomerId >= ? LIMIT ? ");
 
             preparedStatement.setInt(1, offset);
             preparedStatement.setInt(2, limit);
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 customers.add(
                         new Customer(
@@ -199,37 +175,29 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
+
             return customers;
-        }
+
     }
 
     //---reading all user invoice from database
     public ArrayList<CustomerInvoice> selectAllInvoiceByID(int id){
         ArrayList<CustomerInvoice> customerInvoices = new ArrayList<CustomerInvoice>();
 
-        try {
-            // Open Connection
-            conn = DriverManager.getConnection(URL);
+        //---Manage Connection
+        try (Connection conn = connectionFactory.getConnection()){
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT InvoiceId,CustomerId FROM Invoice WHERE CustomerId = ?");
 
             preparedStatement.setInt(1, id);
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 customerInvoices.add(
                         new CustomerInvoice(
@@ -242,36 +210,28 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
+
             return customerInvoices;
-        }
+
     }
 
     //---reading invoicelines from database for userinvoice
     public ArrayList<InvoiceLine> selectUserInvoiceLines(String id) {
         ArrayList<InvoiceLine> UserInvoiceLines = new ArrayList<InvoiceLine>();
 
-            try {
-                // Open Connection
-                conn = DriverManager.getConnection(URL);
+        //---Manage Connection
+            try (Connection conn = connectionFactory.getConnection()){
+
                 System.out.println("Connection to SQLite has been established.");
 
-                // Prepare Statement
+                //---Prepare Statement
                 PreparedStatement preparedStatement =
                         conn.prepareStatement("SELECT InvoiceId,TrackId FROM InvoiceLine WHERE InvoiceId = ?");
                 preparedStatement.setString(1, id);
-                // Execute Statement
+                //---Execute Statement
                 ResultSet resultSet = preparedStatement.executeQuery();
 
-                // Process Results
+                //---Process Results
                 while (resultSet.next()) {
                     UserInvoiceLines.add(
                             new InvoiceLine(
@@ -282,36 +242,30 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             } catch (Exception ex) {
                 System.out.println("Something went wrong...");
                 System.out.println(ex.toString());
-            } finally {
-                try {
-                    // Close Connection
-                    conn.close();
-                } catch (Exception ex) {
-                    System.out.println("Something went wrong while closing connection.");
-                    System.out.println(ex.toString());
-                }
+
             }
 
         return UserInvoiceLines;
     }
+
     //---reading all tracks from database
     public ArrayList<Track> selectTracks(String trackID){
         ArrayList<Track> Tracks = new ArrayList<Track>();
 
-        try {
-            // Open Connection
-            conn = DriverManager.getConnection(URL);
+        //---Manage Connection
+        try (Connection conn = connectionFactory.getConnection()){
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT GenreId,TrackId FROM Track WHERE TrackId=?");
 
             preparedStatement.setString(1, trackID);
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 Tracks.add(
                         new Track(
@@ -324,36 +278,26 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
             return Tracks;
-        }
+
     }
 
     //---reading specific genre from database
     public Genre selectSpecificGenre(int genreID){
         Genre genre = null;
-
+        //---Manage Connection
         try (Connection conn = connectionFactory.getConnection()){
-            // Open Connection
-            //conn = connectionFactory.getConnection();
+
             System.out.println("Connection to SQLite has been established.");
 
-            // Prepare Statement
+            //---Prepare Statement
             PreparedStatement preparedStatement =
                     conn.prepareStatement("SELECT GenreId,Name FROM Genre WHERE GenreId = ?");
             preparedStatement.setInt(1, genreID);
-            // Execute Statement
+            //---Execute Statement
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Process Results
+            //---Process Results
             while (resultSet.next()) {
                 genre = new Genre(
                                 resultSet.getString("GenreId"),
@@ -365,34 +309,21 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
+
             return genre;
-        }
+
     }
 
-    // task 5, add a new customer
+    //---add a new customer
     public Customer addNewCustomer(Customer newCustomer) throws SQLException
     {
+        //---Manage connection
         try (Connection conn = connectionFactory.getConnection()){
-            //conn = connectionFactory.getConnection();
 
-            // use this dummy data only, if the method runs via Program class, to only run on the DB side of things (ignoring API endpoint).
-            if (newCustomer == null)
-            {
-                newCustomer = new Customer("0", "Test", "Testerson", "Denmark", "2600", "555-555-55", "test@test.com");
-            }
 
             PreparedStatement insertCustomerStatement = conn.prepareStatement("INSERT INTO Customer(FirstName, LastName, Country, PostalCode, Phone, Email) VALUES (?,?,?,?,?,?)");
 
-            // Inserting values from the inquired customer instance pushed through via the parameter of this function.
+            //---Inserting values from the inquired customer instance pushed through via the parameter of this function.
             insertCustomerStatement.setString(1, newCustomer.getCustomerFirstname());
             insertCustomerStatement.setString(2, newCustomer.getCustomerLastname());
             insertCustomerStatement.setString(3, newCustomer.getCustomerCountry());
@@ -402,44 +333,21 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
             insertCustomerStatement.executeUpdate();
 
-            // prepare another statement for testing purposes. Only used to see, if the new customer was really added.
-            PreparedStatement checkResultStatement = conn.prepareStatement("SELECT CustomerId,FirstName,LastName FROM Customer WHERE FirstName LIKE ?");
-            checkResultStatement.setString(1, newCustomer.getCustomerFirstname());
-            ResultSet resultset = checkResultStatement.executeQuery();
+        }
 
-            int id = resultset.getInt("CustomerId");
-            String firstname = resultset.getString("FirstName");
-            String lastname = resultset.getString("LastName");
-            System.out.printf("Customer {%d,%s,%s} has now been added to the Customer table \n", id, firstname, lastname);
-        }
-        finally {
-            /*
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
-             */
             return newCustomer;
-        }
+
     }
 
-    // task 6, update an existing customer
+    //---update an existing customer
     public Customer updateExistingCustomer(Customer existingCustomer) throws SQLException
     {
+        //---Manage connection
         try (Connection conn = connectionFactory.getConnection()){
-            //conn = connectionFactory.getConnection();
 
-            // use this dummy data only, if the method runs via Program class, to only run on the DB side of things (ignoring API endpoint).
-            if (existingCustomer == null)
-            {
-                existingCustomer = new Customer("60", "Testy", "Testeron", "Denmark", "2600", "555-555-55", "test@test.com");
-            }
+
             PreparedStatement updateCustomerStatement = conn.prepareStatement("UPDATE Customer SET CustomerId = ?, FirstName = ?, LastName = ?, Country = ?, PostalCode = ?, Phone = ?, Email = ? WHERE CustomerId = ?");
-            //insertCustomerStatement.setInt(1,newCustomer.getId());
+            //---load values from parameter
             updateCustomerStatement.setString(1,existingCustomer.getCustomerId());
             updateCustomerStatement.setString(2,existingCustomer.getCustomerFirstname());
             updateCustomerStatement.setString(3,existingCustomer.getCustomerLastname());
@@ -451,38 +359,21 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
             updateCustomerStatement.executeUpdate();
 
-            PreparedStatement checkResultStatement = conn.prepareStatement("SELECT CustomerId,FirstName,LastName FROM Customer WHERE FirstName LIKE ?");
-            checkResultStatement.setString(1, existingCustomer.getCustomerFirstname());
-            ResultSet resultset = checkResultStatement.executeQuery();
+        }
 
-            int id = resultset.getInt("CustomerId");
-            String firstname = resultset.getString("FirstName");
-            String lastname = resultset.getString("LastName");
-            System.out.printf("Customer {%d,%s,%s} has now been updated in the Customer table \n", id, firstname, lastname);
-        }
-        finally {
-            /*
-            try {
-                // Close Connection
-                conn.close();
-            }
-            catch (Exception ex){
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
-             */
             return existingCustomer;
-        }
+
     }
 
-    // task 8, order customers after, who has spent the most money on products.
+    //---order customers after, who has spent the most money on products.
     public ArrayList<CustomerSpender> orderCustomerByBiggestSpender() throws SQLException
     {
         ArrayList<CustomerSpender> queryResult = new ArrayList<CustomerSpender>();
 
+        //---Manage connection
         try (Connection conn = connectionFactory.getConnection())
         {
-            //conn = connectionFactory.getConnection();
+            //---prepare and execute statement
             PreparedStatement prepStatement = conn.prepareStatement("SELECT FirstName, LastName, Customer.CustomerId, SUM(Total) FROM Customer INNER JOIN Invoice ON Customer.CustomerId = Invoice.CustomerId GROUP BY Customer.FirstName, Customer.LastName, Customer.CustomerId ORDER BY SUM(Total) DESC;");
             ResultSet resultset = prepStatement.executeQuery();
 
@@ -492,7 +383,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
                 String lastName = resultset.getString("LastName");
                 double totalCost = resultset.getDouble("SUM(Total)");
 
-                // Add the results to be used in the API endpoint.
+                //---Add the results to be used in the API endpoint in a custom object.
                 queryResult.add(new CustomerSpender(firstName, lastName, totalCost));
 
                 System.out.printf("Customer name and how much they have spend in total {%s,%s,%f} \n", firstName, lastName, totalCost);
@@ -502,30 +393,24 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
-            /*
-            try {
-                // Close Connection
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("Something went wrong while closing connection.");
-                System.out.println(ex.toString());
-            }
-            */
+
             return queryResult;
-        }
+
     }
 
-    // task 7, query the number of registered customer living in different country's.
+    //---query the number of registered customer living in different country's.
     public ArrayList<CustomerCountry> orderCustomerByCountry() throws SQLException
     {
         ArrayList<CustomerCountry> queryResult = new ArrayList<CustomerCountry>();
 
+        //---open connection
         try (Connection conn = connectionFactory.getConnection()){
-            //DevConnectionManager.getInstance().getConnection();
+
+            //---prepare and execute statement
             PreparedStatement prepStatement = conn.prepareStatement("SELECT Country,COUNT(CustomerId) FROM Customer GROUP BY Country ORDER BY COUNT(CustomerId) DESC");
             ResultSet resultset = prepStatement.executeQuery();
 
+            //---making new objects to hold query results
             while (resultset.next()) {
                 String country = resultset.getString("Country");
                 int numberOfCustomers = resultset.getInt("COUNT(CustomerId)");
@@ -539,9 +424,9 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             System.out.println("Something went wrong...");
             System.out.println(ex.toString());
         }
-        finally {
+
 
             return queryResult;
-        }
+
     }
 }

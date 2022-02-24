@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+//---connection manager for production purposes
 @Component
 @Profile("production")
 public class ProdConnectionManager implements DatabaseConnectionFactory

@@ -8,8 +8,6 @@ public interface RestService {
 
     ArrayList<Customer> getAll();
 
-    static ArrayList<String> getFavGenre(int customerid) {
-        return null;
-    }
+    ArrayList<String> getFavGenre(int customerid);
 
 }
